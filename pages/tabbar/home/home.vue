@@ -55,7 +55,7 @@
                     <block v-else>
                         <view class="content" v-for="(category, index) in categoryList" :key="category.metadata.name"
                               @click="fnToCategoryBy(category)">
-                            <category-mini-card :category="category"></category-mini-card>
+                            <category-mini-card :category="category" v-if="category.postCount"></category-mini-card>
                         </view>
                     </block>
                 </scroll-view>

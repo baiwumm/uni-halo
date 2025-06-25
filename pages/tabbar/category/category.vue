@@ -18,7 +18,7 @@
                     <tm-translate v-for="(item, index) in dataList" :key="index"
                                   style="box-sizing: border-box;width: 50%;padding: 0 8rpx;" animation-name="fadeUp"
                                   :wait="calcAniWait(index)">
-                        <view class="catgory-card" :style="{backgroundImage:`url(${item.spec.cover})`}">
+                        <view class="catgory-card" :style="{backgroundImage:`url(${item.spec.cover})`}" v-if="item.postCount">
                             <view class="content" @click="handleToCategory(item)">
                                 <view style="font-size: 32rpx;color: #ffffff;">{{ item.spec.displayName }}</view>
                                 <view v-if="!calcAuditModeEnabled"

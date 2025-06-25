@@ -1,6 +1,6 @@
 {
     "name" : "uni-halo",
-    "appid" : "__UNI__5748B6E",
+    "appid" : "__UNI__B4F4D40",
     "description" : "uni-halo博客：基于halo开源博客系统API开发的多端博客。",
     "versionName" : "2.0.8",
     "versionCode" : 208,
@@ -119,7 +119,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx1bb161867082c72f",
+        "appid" : "wxab2feaffc36b3190",
         "setting" : {
             "urlCheck" : false,
             "minified" : true
