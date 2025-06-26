@@ -3,7 +3,7 @@
 		:class="{ 'child-comment-item': isChild, 'no-solid': !useSolid, classItem }">
 		<view class="comment-item_user flex">
 			<image class="user-avatar" :class="{ 'is-radius': globalAppSettings.isAvatarRadius }"
-				:src="$utils.checkAvatarUrl(comment.owner.avatar, false)" mode="aspectFill"
+				:src="comment.owner.avatar ? $utils.checkAvatarUrl(comment.owner.avatar, false) : `https://weavatar.com/avatar/${comment.spec.owner.annotations['email-hash']}`" mode="aspectFill"
 				@error="fnOnImageError(comment)"></image>
 			<view class="user-info pl-14">
 				<view class="author">
