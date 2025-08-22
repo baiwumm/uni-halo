@@ -2,7 +2,7 @@
 const UHaloBaseConfig = Object.freeze({
 
     /** 基础请求域名：你的Halo博客基础域名 */
-    BASE_API: "",
+    BASE_API: "https://baiwumm.com",
     // 示例：
     // BASE_API: "https://blog.xiaoxiaomo.cn",
 

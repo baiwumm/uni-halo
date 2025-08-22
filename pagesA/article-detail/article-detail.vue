@@ -18,7 +18,12 @@
           </view>
 
           <view class="cover" v-if="result.spec.cover">
-            <image class="cover-img" mode="aspectFill" :src="calcUrl(result.spec.cover)"></image>
+            <image
+              class="cover-img"
+              mode="aspectFill"
+              :src="calcUrl(result.spec.cover)"
+              @click="handlePreview(0, [{ url: calcUrl(result.spec.cover) }])"
+            ></image>
           </view>
           <view class="count" :class="{ 'no-thumbnail': !result.spec.cover }">
             <view class="count-item">
@@ -154,34 +159,36 @@
               {{ voteIsOpen ? "收起" : "展开" }}
             </text>
           </view>
-          <view v-show="voteIsOpen" class="flex flex-col uh-gap-8 uh-mt-8">
-            <PluginUnavailable
-              v-if="!uniHaloPluginAvailable"
-              :article="result"
-              :pluginId="uniHaloPluginId"
-              :error-text="uniHaloPluginAvailableError"
-              :useDecoration="false"
-              :customStyle="{
-                width: '100%',
-                borderRadius: '16rpx',
-              }"
-            />
-            <template v-else>
-              <ArticleVote
-                v-for="(voteId, voteIdIndex) in result._voteIds"
-                :key="voteId"
-                :voteId="voteId"
-                :index="voteIdIndex"
-              >
-              </ArticleVote>
-              <view v-show="!voteIsOpen" class="vote-tip" @click="voteIsOpen = !voteIsOpen">
-                投票已收起，点击展开 {{ result._voteIds.length }} 个投票项
-              </view>
-            </template>
-          </view>
-          <view v-show="!uniHaloPluginAvailable && !voteIsOpen" class="vote-tip" @click="voteIsOpen = !voteIsOpen">
-            提示区域已收起，点击显示
-          </view>
+          <template v-if="reloadVote">
+            <view v-show="voteIsOpen" class="flex flex-col uh-gap-8 uh-mt-8">
+              <PluginUnavailable
+                v-if="!uniHaloPluginAvailable"
+                :pluginId="uniHaloPluginId"
+                :error-text="uniHaloPluginAvailableError"
+                :useDecoration="false"
+                :customStyle="{
+                  width: '100%',
+                  borderRadius: '16rpx',
+                }"
+              />
+              <template v-else>
+                <ArticleVote
+                  v-for="(voteId, voteIdIndex) in result._voteIds"
+                  :key="voteId"
+                  :voteId="voteId"
+                  :article="result"
+                  :index="voteIdIndex"
+                >
+                </ArticleVote>
+              </template>
+            </view>
+            <view v-show="uniHaloPluginAvailable && !voteIsOpen" class="vote-tip" @click="voteIsOpen = !voteIsOpen">
+              投票已收起，点击展开 {{ result._voteIds.length }} 个投票项
+            </view>
+            <view v-show="!uniHaloPluginAvailable && !voteIsOpen" class="vote-tip" @click="voteIsOpen = !voteIsOpen">
+              提示区域已收起，点击显示
+            </view>
+          </template>
         </view>
 
         <!-- 版权声明 -->
@@ -513,6 +520,7 @@ export default {
       commentListScrollTop: 0,
 
       voteIsOpen: true,
+      reloadVote: false,
     };
   },
   computed: {
@@ -572,7 +580,14 @@ export default {
     this.queryParams.name = e.name;
     this.fnGetData();
   },
-
+  onShow() {
+    if (this.reloadVote) {
+      this.reloadVote = false;
+      setTimeout(() => {
+        this.reloadVote = true;
+      }, 100);
+    }
+  },
   onPullDownRefresh() {
     this.fnGetData();
   },
@@ -643,6 +658,7 @@ export default {
           this.result = tempResult;
           this.fnSetPageTitle("文章详情");
           this.loading = "success";
+          this.reloadVote = true;
           this.fnHandleSetFlotButtonItems(this.haloConfigs);
           this.handleQueryCommentListScrollTop();
         })
@@ -1395,6 +1411,12 @@ export default {
       }
 
       return ids;
+    },
+    handlePreview(index, list) {
+      uni.previewImage({
+        current: index,
+        urls: list.map((item) => item.url),
+      });
     },
   },
 };

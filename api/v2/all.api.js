@@ -246,16 +246,77 @@ export default {
     return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/trackers/upvote`, data, {});
   },
 
+  /**
+   * 限制阅读校验
+   * @param restrictType
+   * @param code
+   * @param keyId
+   * @returns {HttpPromise<any>}
+   */
+  requestRestrictReadCheck: (restrictType, code, keyId) => {
+    const params = {
+      code: code,
+      templateType: "post",
+      restrictType: restrictType,
+      keyId: keyId,
+    };
+    return HttpHandler.Post(`/apis/tools.muyin.site/v1alpha1/restrict-read/check`, params, {
+      header: {
+        Authorization: getAppConfigs().pluginConfig.toolsPlugin?.Authorization,
+        "Wechat-Session-Id": uni.getStorageSync("openid"),
+      },
+    });
+  },
+
+  /**
+   * 获取文章验证码
+   */
+  createVerificationCode: () => {
+    return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/restrict-read/create`, null, {
+      header: {
+        Authorization: getAppConfigs().pluginConfig.toolsPlugin?.Authorization,
+        "Wechat-Session-Id": uni.getStorageSync("openid"),
+      },
+    });
+  },
+
+  /**
+   * 提交友情链接
+   */
+  submitLink(form) {
+    return HttpHandler.Post(`/apis/linksSubmit.muyin.site/v1alpha1/submit`, form, {
+      header: {
+        Authorization: getAppConfigs().pluginConfig.linksSubmitPlugin?.Authorization,
+        "Wechat-Session-Id": uni.getStorageSync("openid"),
+      },
+    });
+  },
+  /**
+   * 获取二维码信息
+   */
+  getQRCodeInfo: (key) => {
+    return HttpHandler.Get(`/apis/api.uni.uhalo.pro/v1alpha1/plugins/plugin-uni-halo/getQRCodeInfo/${key}`, null, {});
+  },
+  /**
+   * 获取二维码图片
+   */
+  getQRCodeImg: (postId) => {
+    return HttpHandler.Get(`/apis/api.uni.uhalo.pro/v1alpha1/plugins/plugin-uni-halo/getQRCodeImg/${postId}`, null, {});
+  },
+  /**
+   * 点赞
+   * @param {*} data ={group, plural, name}
+   */
+  submitUpvote(data) {
+    return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/trackers/upvote`, data, {});
+  },
+
   //----------- 投票 -----------------
   /**
    * 获取投票列表
    */
   getVoteList: (params) => {
-    return HttpHandler.Get(`/apis/console.api.vote.kunkunyu.com/v1alpha1/votes`, params, {
-      custom: {
-        personalToken: getPersonalToken(),
-      },
-    });
+    return HttpHandler.Get(`/apis/api.vote.kunkunyu.com/v1alpha1/votes`, params);
   },
   /**
    * 获取投票详情
